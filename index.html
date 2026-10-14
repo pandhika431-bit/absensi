@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sistem Absensi & 7 KAIH Siswa</title>
+    <title>Sistem Aktivitas & 7 KAIH Siswa</title>
     <script src="https://unpkg.com/html5-qrcode"></script>
     <style>
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f0f2f5; text-align: center; margin: 0; padding: 20px; }
@@ -20,8 +20,10 @@
         input, select { width: 100%; padding: 9px; box-sizing: border-box; border: 1px solid #ccc; border-radius: 6px; }
         button.submit-btn { width: 100%; background: #28a745; color: white; border: none; padding: 11px; border-radius: 6px; font-size: 15px; font-weight: bold; cursor: pointer; }
         button.submit-btn:hover { background: #218838; }
-        .checkbox-group { display: flex; align-items: center; margin-bottom: 8px; font-size: 14px; }
-        .checkbox-group input { width: 20px; height: 20px; margin-right: 10px; }
+        .kaih-box { background: #f9f9f9; border: 1px solid #ddd; padding: 10px; border-radius: 6px; margin-bottom: 10px; font-size: 13px; }
+        .kaih-box label { font-size: 14px; color: #007bff; display: inline-flex; align-items: center; width: 100%; cursor: pointer; }
+        .kaih-box input { width: 20px; height: 20px; margin-right: 10px; }
+        .desc { font-size: 11px; color: #666; margin-left: 30px; margin-top: 2px; }
         #result { margin-top: 15px; padding: 10px; font-weight: bold; border-radius: 6px; text-align: center; font-size: 13px; }
         .success { background: #d4edda; color: #155724; }
         .error { background: #f8d7da; color: #721c24; }
@@ -33,47 +35,73 @@
         <h2>Sistem Aktivitas Siswa</h2>
         <p style="font-size: 13px; color: #666;">Gerakan 7 Kebiasaan Anak Indonesia Hebat</p>
 
-        <!-- HALAMAN LOGIN SISWA -->
-        <div id="login-card">
-            <h3>Login Siswa</h3>
-            <p style="font-size: 12px; color: #555;">Masukkan Nama Lengkap dan NIS Anda</p>
-            <form onsubmit="handleLogin(event)">
+        <!-- HALAMAN PEMILIHAN LOGIN -->
+        <div id="login-selection">
+            <h3>Pilih Peran Login</h3>
+            <button class="submit-btn" onclick="showLogin('guru')" style="margin-bottom: 10px; background: #007bff;">👨‍🏫 Login Guru / Piket</button>
+            <button class="submit-btn" onclick="showLogin('siswa')" style="background: #17a2b8;">stu️ Login Siswa / Wali Murid</button>
+        </div>
+
+        <!-- FORM LOGIN GURU -->
+        <div id="login-guru-card" class="hidden">
+            <h3>Login Guru (Scanner)</h3>
+            <form onsubmit="handleLoginGuru(event)">
                 <div class="form-group">
                     <label>Nama Lengkap:</label>
-                    <input type="text" id="login_nama" required placeholder="Contoh: Ahmad Riyadi">
+                    <input type="text" id="guru_nama" required placeholder="Agnes Andhika putra Pratama">
                 </div>
                 <div class="form-group">
-                    <label>NIS (Nomor Induk Siswa):</label>
-                    <input type="password" id="login_nis" required placeholder="Contoh: 5418">
+                    <label>Password (NIP):</label>
+                    <input type="password" id="guru_pass" required placeholder="199608112024211016">
                 </div>
-                <button type="submit" class="submit-btn">Masuk Sistem</button>
+                <button type="submit" class="submit-btn">Masuk sebagai Guru</button>
+                <p><a href="#" onclick="location.reload()" style="font-size:12px; color:#666;">Kembali</a></p>
             </form>
         </div>
 
-        <!-- HALAMAN UTAMA SETELAH LOGIN -->
-        <div id="main-app" class="hidden">
+        <!-- FORM LOGIN SISWA -->
+        <div id="login-siswa-card" class="hidden">
+            <h3>Login Siswa / Wali Murid</h3>
+            <form onsubmit="handleLoginSiswa(event)">
+                <div class="form-group">
+                    <label>Nama Siswa:</label>
+                    <input type="text" id="siswa_nama" required placeholder="Nama Lengkap Siswa">
+                </div>
+                <div class="form-group">
+                    <label>NIS (Password):</label>
+                    <input type="password" id="siswa_nis" required placeholder="Nomor Induk Siswa">
+                </div>
+                <button type="submit" class="submit-btn">Masuk Sistem</button>
+                <p><a href="#" onclick="location.reload()" style="font-size:12px; color:#666;">Kembali</a></p>
+            </form>
+        </div>
+
+        <!-- DASHBOARD GURU (SCANNER) -->
+        <div id="guru-app" class="hidden">
             <div style="background: #e9ecef; padding: 8px; border-radius: 6px; margin-bottom: 12px; font-size: 14px;">
-                👤 Selamat datang, <b id="user-display"></b> | <a href="#" onclick="logout()" style="color: #dc3545; font-size: 12px;">Keluar</a>
+                👨‍🏫 Panel Guru: <b>Agnes Andhika</b> | <a href="#" onclick="location.reload()" style="color: #dc3545; font-size: 12px;">Keluar</a>
+            </div>
+            <p style="font-size: 13px; font-weight: bold;">📷 Arahkan Barcode Kartu Siswa ke Kamera:</p>
+            <div id="reader"></div>
+        </div>
+
+        <!-- DASHBOARD SISWA (IZIN & 7 KAIH) -->
+        <div id="siswa-app" class="hidden">
+            <div style="background: #e9ecef; padding: 8px; border-radius: 6px; margin-bottom: 12px; font-size: 14px;">
+                👤 Siswa: <b id="user-display"></b> | <a href="#" onclick="location.reload()" style="color: #dc3545; font-size: 12px;">Keluar</a>
             </div>
 
             <div>
-                <button class="tab-btn active" onclick="switchTab('scan')">📷 Scan Hadir</button>
-                <button class="tab-btn" onclick="switchTab('izin')">✉️ Izin/Sakit</button>
-                <button class="tab-btn" onclick="switchTab('kaih')">⭐ 7 KAIH Harian</button>
+                <button class="tab-btn active" onclick="switchTab('izin')">✉️ Lapor Izin / Sakit</button>
+                <button class="tab-btn" onclick="switchTab('kaih')">⭐ Catatan 7 KAIH</button>
             </div>
 
-            <!-- TAB 1: SCAN KEHADIRAN -->
-            <div id="scan-section" class="section active">
-                <p style="font-size: 12px;">Arahkan barcode kartu siswa ke kamera:</p>
-                <div id="reader"></div>
-            </div>
-
-            <!-- TAB 2: LAPOR IZIN / SAKIT -->
-            <div id="izin-section" class="section">
+            <!-- TAB IZIN/SAKIT -->
+            <div id="izin-section" class="section active">
                 <form id="izinForm" onsubmit="submitIzin(event)">
                     <div class="form-group">
-                        <label>NIS / Barcode Anda:</label>
-                        <input type="text" id="nis_izin" required placeholder="Masukkan NIS Anda">
+                        <label>NIS Anda:</label>
+                        <input type="text" id="nis_izin" required readonly style="background:#e9f7ef;">
                     </div>
                     <div class="form-group">
                         <label>Keterangan:</label>
@@ -90,22 +118,44 @@
                 </form>
             </div>
 
-            <!-- TAB 3: PENGISIAN 7 KEBIASAAN ANAK INDONESIA HEBAT (7 KAIH) -->
+            <!-- TAB 7 KAIH DENGAN DESKRIPSI -->
             <div id="kaih-section" class="section">
-                <p style="font-size: 12px; font-weight: bold; color: #007bff;">Centang kebiasaan hebat yang sudah Anda lakukan hari ini:</p>
+                <p style="font-size: 12px; font-weight: bold; color: #007bff;">Centang kegiatan pembiasaan yang Anda lakukan hari ini:</p>
                 <form onsubmit="submitKaih(event)">
                     <div class="form-group">
-                        <label>Tanggal Pengisian:</label>
-                        <input type="date" id="kaih_tanggal" required>
+                        <label>Tanggal (Realtime):</label>
+                        <input type="date" id="kaih_tanggal" required readonly style="background:#e9f7ef;">
                     </div>
-                    <div class="checkbox-group"><input type="checkbox" id="k_bangun"> ☀️ Bangun Pagi (04.00 - 06.00)</div>
-                    <div class="checkbox-group"><input type="checkbox" id="k_ibadah"> 🙏 Taat Beribadah</div>
-                    <div class="checkbox-group"><input type="checkbox" id="k_olahraga"> ⚽ Berolahraga / Aktivitas Fisik</div>
-                    <div class="checkbox-group"><input type="checkbox" id="k_makan"> 🥗 Makan Sehat dan Bergizi</div>
-                    <div class="checkbox-group"><input type="checkbox" id="k_belajar"> 📚 Gemar Belajar & Membaca</div>
-                    <div class="checkbox-group"><input type="checkbox" id="k_sosial"> 🤝 Aktif Bermasyarakat / Gotong Royong</div>
-                    <div class="checkbox-group"><input type="checkbox" id="k_tidur"> 🌙 Tidur Cepat & Cukup</div>
-                    <br>
+
+                    <div class="kaih-box">
+                        <label><input type="checkbox" id="k_bangun"> ☀️ 1. Bangun Pagi</label>
+                        <div class="desc">Bangun antara pukul 04.00–06.00 untuk melatih kedisiplinan dan kesiapan diri[cite: 23].</div>
+                    </div>
+                    <div class="kaih-box">
+                        <label><input type="checkbox" id="k_ibadah"> 🙏 2. Taat Beribadah</label>
+                        <div class="desc">Pengabdian dan ketaatan kepada Tuhan sesuai agama/kepercayaan untuk memperkuat spiritual[cite: 30].</div>
+                    </div>
+                    <div class="kaih-box">
+                        <label><input type="checkbox" id="k_olahraga"> ⚽ 3. Berolahraga</label>
+                        <div class="desc">Aktivitas fisik teratur untuk menjaga kebugaran tubuh dan kesehatan mental[cite: 37].</div>
+                    </div>
+                    <div class="kaih-box">
+                        <label><input type="checkbox" id="k_makan"> 🥗 4. Makan Sehat & Bergizi</label>
+                        <div class="desc">Konsumsi makanan bergizi seimbang (sesuai pedoman Isi Piringku) untuk energi belajar[cite: 44, 77].</div>
+                    </div>
+                    <div class="kaih-box">
+                        <label><input type="checkbox" id="k_belajar"> 📚 5. Gemar Belajar</label>
+                        <div class="desc">Antusias menambah pengetahuan, membaca buku, dan mengembangkan keterampilan[cite: 52].</div>
+                    </div>
+                    <div class="kaih-box">
+                        <label><input type="checkbox" id="k_sosial"> 🤝 6. Aktif Bermasyarakat</label>
+                        <div class="desc">Interaksi sosial, gotong royong, dan peduli terhadap sesama di lingkungan sekitar[cite: 61].</div>
+                    </div>
+                    <div class="kaih-box">
+                        <label><input type="checkbox" id="k_tidur"> 🌙 7. Tidur Cepat</label>
+                        <div class="desc">Tidur tepat waktu di malam hari agar waktu istirahat cukup dan ideal[cite: 69].</div>
+                    </div>
+
                     <button type="submit" class="submit-btn">Simpan Catatan 7 KAIH</button>
                 </form>
             </div>
@@ -117,38 +167,77 @@
     <script>
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzi7xV6wGqNfjge-Y9Ig1GSj1I6HF_qS09LRFsx8Q08ZrX4oV9fuauIqL42OMW2kSbU/exec";
         let html5QrcodeScanner = null;
+        let loggedInNis = "";
 
-        // Set default tanggal hari ini di form 7 KAIH
+        // Kunci tanggal ke realtime hari ini
         document.getElementById('kaih_tanggal').valueAsDate = new Date();
 
-        function handleLogin(e) {
+        function showLogin(role) {
+            document.getElementById('login-selection').classList.add('hidden');
+            if(role === 'guru') {
+                document.getElementById('login-guru-card').classList.remove('hidden');
+            } else {
+                document.getElementById('login-siswa-card').classList.remove('hidden');
+            }
+        }
+
+        function handleLoginGuru(e) {
             e.preventDefault();
-            const nama = document.getElementById('login_nama').value;
-            const nis = document.getElementById('login_nis').value;
+            const nama = document.getElementById('guru_nama').value;
+            const pass = document.getElementById('guru_pass').value;
             const resultDiv = document.getElementById('result');
 
-            resultDiv.className = "";
-            resultDiv.innerHTML = "Memeriksa data login...";
+            resultDiv.innerHTML = "Memeriksa akses guru...";
 
             fetch(SCRIPT_URL, {
                 method: "POST",
                 mode: "no-cors",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ action: "login", nama: nama, nis: nis })
+                body: JSON.stringify({ action: "login_guru", nama: nama, nis: pass })
             })
             .then(() => {
-                // Karena mode no-cors tidak membaca return JSON langsung, kita validasi sederhana atau anggap sukses jika NIS terisi
-                document.getElementById('login-card').classList.add('hidden');
-                document.getElementById('main-app').classList.remove('hidden');
+                // Validasi sisi klien ketat sesuai permintaan
+                if(nama.toLowerCase().includes("agnes") && pass === "199608112024211016") {
+                    document.getElementById('login-guru-card').classList.add('hidden');
+                    document.getElementById('guru-app').classList.remove('hidden');
+                    resultDiv.innerHTML = "";
+                    
+                    if(!html5QrcodeScanner) {
+                        html5QrcodeScanner = new Html5QrcodeScanner("reader", { fps: 10, qrbox: 250 }, false);
+                        html5QrcodeScanner.render(onScanSuccess);
+                    }
+                } else {
+                    resultDiv.className = "error";
+                    resultDiv.innerHTML = "❌ Nama atau Password Guru tidak sesuai!";
+                }
+            })
+            .catch(err => {
+                resultDiv.className = "error";
+                resultDiv.innerHTML = `❌ Error: ${err}`;
+            });
+        }
+
+        function handleLoginSiswa(e) {
+            e.preventDefault();
+            const nama = document.getElementById('siswa_nama').value;
+            const nis = document.getElementById('siswa_nis').value;
+            const resultDiv = document.getElementById('result');
+
+            resultDiv.innerHTML = "Memeriksa data siswa...";
+
+            fetch(SCRIPT_URL, {
+                method: "POST",
+                mode: "no-cors",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ action: "login_siswa", nama: nama, nis: nis })
+            })
+            .then(() => {
+                loggedInNis = nis;
+                document.getElementById('login-siswa-card').classList.add('hidden');
+                document.getElementById('siswa-app').classList.remove('hidden');
                 document.getElementById('user-display').innerText = nama;
                 document.getElementById('nis_izin').value = nis;
                 resultDiv.innerHTML = "";
-                
-                // Mulai scanner kamera setelah login
-                if(!html5QrcodeScanner) {
-                    html5QrcodeScanner = new Html5QrcodeScanner("reader", { fps: 10, qrbox: 250 }, false);
-                    html5QrcodeScanner.render(onScanSuccess);
-                }
             })
             .catch(err => {
                 resultDiv.className = "error";
@@ -156,20 +245,11 @@
             });
         }
 
-        function logout() {
-            document.getElementById('main-app').classList.add('hidden');
-            document.getElementById('login-card').classList.remove('hidden');
-            document.getElementById('result').innerHTML = "";
-        }
-
         function switchTab(tab) {
             document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
             document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
             
-            if(tab === 'scan') {
-                event.target.classList.add('active');
-                document.getElementById('scan-section').classList.add('active');
-            } else if(tab === 'izin') {
+            if(tab === 'izin') {
                 event.target.classList.add('active');
                 document.getElementById('izin-section').classList.add('active');
             } else {
@@ -182,9 +262,8 @@
         function onScanSuccess(decodedText) {
             if (isProcessing) return;
             isProcessing = true;
-            
             const resultDiv = document.getElementById('result');
-            resultDiv.innerHTML = "Mengirim kehadiran...";
+            resultDiv.innerHTML = "Mencatat kehadiran...";
 
             fetch(SCRIPT_URL, {
                 method: "POST",
@@ -206,7 +285,6 @@
 
         function submitIzin(e) {
             e.preventDefault();
-            const nis = document.getElementById('nis_izin').value;
             const status = document.getElementById('status_izin').value;
             const fileInput = document.getElementById('foto_surat');
             const resultDiv = document.getElementById('result');
@@ -223,7 +301,7 @@
             reader.onload = function(uploadEvent) {
                 const payload = {
                     action: "izin",
-                    barcode: nis,
+                    barcode: loggedInNis,
                     status: status,
                     fileData: uploadEvent.target.result,
                     fileName: file.name
@@ -253,11 +331,10 @@
         function submitKaih(e) {
             e.preventDefault();
             const resultDiv = document.getElementById('result');
-            const nis = document.getElementById('nis_izin').value;
 
             const payload = {
                 action: "simpan_kaih",
-                barcode: nis,
+                barcode: loggedInNis,
                 tanggal: document.getElementById('kaih_tanggal').value,
                 kaih: {
                     bangun: document.getElementById('k_bangun').checked,
@@ -280,7 +357,7 @@
             })
             .then(() => {
                 resultDiv.className = "success";
-                resultDiv.innerHTML = `⭐ Catatan 7 KAIH Hari Ini Berhasil Disimpan!`;
+                resultDiv.innerHTML = `⭐ Catatan 7 KAIH Berhasil Disimpan & Terekap Otomatis!`;
             })
             .catch(err => {
                 resultDiv.className = "error";
