@@ -274,19 +274,33 @@
             });
         }
 
-        function switchTag(tab) {
-    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+       function switchTab(tab, btn) {
+    // 1. Sembunyikan semua kotak section
+    var izinSec = document.getElementById('izin-section');
+    var kaihSec = document.getElementById('kaih-section');
+    var soalSec = document.getElementById('soal-section');
     
-    if(tab === 'izin') {
-        event.target.classList.add('active');
-        document.getElementById('izin-section').classList.add('active');
-    } else if(tab === 'kaih') {
-        event.target.classList.add('active');
-        document.getElementById('kaih-section').classList.add('active');
-    } else if(tab === 'soal') {
-        event.target.classList.add('active');
-        document.getElementById('soal-section').classList.add('active');
+    if (izinSec) izinSec.classList.remove('active');
+    if (kaihSec) kaihSec.classList.remove('active');
+    if (soalSec) soalSec.classList.remove('active');
+
+    // 2. Hilangkan warna aktif dari semua tombol
+    document.querySelectorAll('.tab-btn').forEach(function(b) {
+        b.classList.remove('active');
+    });
+
+    // 3. Tampilkan kotak section yang diklik
+    if (tab === 'izin' && izinSec) {
+        izinSec.classList.add('active');
+    } else if (tab === 'kaih' && kaihSec) {
+        kaihSec.classList.add('active');
+    } else if (tab === 'soal' && soalSec) {
+        soalSec.classList.add('active');
+    }
+
+    // 4. Berikan efek aktif pada tombol yang ditekan
+    if (btn) {
+        btn.classList.add('active');
     }
 }
 
