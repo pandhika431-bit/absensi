@@ -94,6 +94,7 @@
             <div>
                 <button class="tab-btn active" onclick="switchTab('izin')">✉️ Lapor Izin / Sakit</button>
                 <button class="tab-btn" onclick="switchTab('kaih')">⭐ Catatan 7 KAIH</button>
+		<button class="tab-btn" onclick="switchTab('soal')">📝 Latihan Soal Stimulus</button>
             </div>
 
             <!-- TAB IZIN/SAKIT -->
@@ -160,7 +161,35 @@
                 </form>
             </div>
         </div>
+	<!-- TAB SOAL STIMULUS AI -->
+<div id="soal-section" class="section">
+    <h3>📝 Latihan Soal Berbasis Stimulus (AI)</h3>
+    <div class="form-group">
+        <label>Pilih Mata Pelajaran:</label>
+        <select id="soal_mapel">
+            <option value="Bahasa Indonesia">Bahasa Indonesia</option>
+            <option value="IPA">Ilmu Pengetahuan Alam (IPA)</option>
+            <option value="Matematika">Matematika</option>
+            <option value="PPKn">PPKn</option>
+        </select>
+    </div>
+    <div class="form-group">
+        <label>Topik / Materi:</label>
+        <input type="text" id="soal_materi" placeholder="Contoh: Tata Surya, Pencemaran Lingkungan">
+    </div>
+    <button type="button" class="submit-btn" onclick="muatSoalBaru()" style="background:#17a2b8; margin-bottom:15px;">Mulai / Ambil Soal Baru</button>
 
+    <div id="kontainer-soal" class="hidden" style="background:#f9f9f9; padding:12px; border-radius:6px; border:1px solid #ddd; text-align:left;">
+        <p style="font-weight:bold; color:#333;">📖 Stimulus:</p>
+        <p id="teks-stimulus" style="font-size:13px; font-style:italic; background:#fff; padding:8px; border:1px dashed #ccc;"></p>
+        
+        <p style="font-weight:bold; color:#333; margin-top:10px;" id="teks-pertanyaan"></p>
+        <div id="pilihan-jawaban" style="font-size:13px; margin-bottom:10px;"></div>
+        
+        <button type="button" class="submit-btn" onclick="cekJawaban()">Kirim Jawaban</button>
+    </div>
+    <div id="hasil-pengerjaan" style="margin-top:10px; font-weight:bold; font-size:13px;"></div>
+</div>
         <div id="result"></div>
     </div>
 
@@ -245,18 +274,21 @@
             });
         }
 
-        function switchTab(tab) {
-            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-            
-            if(tab === 'izin') {
-                event.target.classList.add('active');
-                document.getElementById('izin-section').classList.add('active');
-            } else {
-                event.target.classList.add('active');
-                document.getElementById('kaih-section').classList.add('active');
-            }
-        }
+        function switchTag(tab) {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+    
+    if(tab === 'izin') {
+        event.target.classList.add('active');
+        document.getElementById('izin-section').classList.add('active');
+    } else if(tab === 'kaih') {
+        event.target.classList.add('active');
+        document.getElementById('kaih-section').classList.add('active');
+    } else if(tab === 'soal') {
+        event.target.classList.add('active');
+        document.getElementById('soal-section').classList.add('active');
+    }
+}
 
         let isProcessing = false;
         function onScanSuccess(decodedText) {
