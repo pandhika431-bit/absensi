@@ -413,19 +413,49 @@
 
 let currentSoalData = null;
 
-        function muatSoalBaru() {
-            const mapel = document.getElementById('soal_mapel').value;
-            const materi = document.getElementById('soal_materi').value;
-            const hasilDiv = document.getElementById('hasil-pengerjaan');
-            if(!materi) { alert("Isi materi dulu!"); return; }
-            
-            hasilDiv.innerHTML = "🤖 AI sedang merancang soal...";
-            fetch(SCRIPT_URL, {
-                method: "POST", mode: "no-cors",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ action: "get_soal", mapel: mapel, materi: materi })
-            }).then(() => { hasilDiv.innerHTML = "Silakan klik tombol ambil soal lagi atau cek koneksi."; });
-        }
+function muatSoalBaru() {
+    const mapel = document.getElementById('soal_mapel').value;
+    const materi = document.getElementById('soal_materi').value;
+    const hasilDiv = document.getElementById('hasil-pengerjaan');
+    const kontainerSoal = document.getElementById('kontainer-soal');
+    
+    if(!materi) {
+        alert("Harap isi topik atau materi terlebih dahulu!");
+        return;
+    }
+    
+    hasilDiv.innerHTML = "🤖 AI sedang merancang soal stimulus, mohon tunggu sebentar...";
+    kontainerSoal.classList.add('hidden');
+
+    fetch(SCRIPT_URL, {
+        method: "POST",
+        headers: { "Content-Type": "text/plain;charset=utf-8" }, // Menggunakan text/plain agar terhindar dari blokir CORS browser
+        body: JSON.stringify({ action: "get_soal", mapel: mapel, materi: materi })
+    })
+    .then(response => response.json())
+    .then(data => {
+        currentSoalData = data;
+        
+        // Tampilkan data ke elemen HTML
+        document.getElementById('teks-stimulus').innerText = data.stimulus;
+        document.getElementById('teks-pertanyaan').innerText = data.pertanyaan;
+        
+        let pilihanHtml = "";
+        data.pilihan.forEach((p, index) => {
+            let huruf = String.fromCharCode(65 + index); // A, B, C, D
+            pilihanHtml += `<label style="display:block; margin:5px 0; cursor:pointer;">
+                <input type="radio" name="jawaban" value="${huruf}"> ${p}
+            </label>`;
+        });
+        
+        document.getElementById('pilihan-jawaban').innerHTML = pilihanHtml;
+        kontainerSoal.classList.remove('hidden');
+        hasilDiv.innerHTML = "";
+    })
+    .catch(err => {
+        hasilDiv.innerHTML = `❌ Gagal memuat soal dari AI: ${err}`;
+    });
+}
 
         function cekJawaban() {
             const selected = document.querySelector('input[name="jawaban"]:checked');
