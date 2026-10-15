@@ -364,6 +364,43 @@
                 resultDiv.innerHTML = `❌ Gagal: ${err}`;
             });
         }
+
+let currentSoalData = null;
+
+        function muatSoalBaru() {
+            const mapel = document.getElementById('soal_mapel').value;
+            const materi = document.getElementById('soal_materi').value;
+            const hasilDiv = document.getElementById('hasil-pengerjaan');
+            if(!materi) { alert("Isi materi dulu!"); return; }
+            
+            hasilDiv.innerHTML = "🤖 AI sedang merancang soal...";
+            fetch(SCRIPT_URL, {
+                method: "POST", mode: "no-cors",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ action: "get_soal", mapel: mapel, materi: materi })
+            }).then(() => { hasilDiv.innerHTML = "Silakan klik tombol ambil soal lagi atau cek koneksi."; });
+        }
+
+        function cekJawaban() {
+            const selected = document.querySelector('input[name="jawaban"]:checked');
+            if(!selected) { alert("Pilih jawaban!"); return; }
+            const isBenar = selected.value.includes(currentSoalData.kunci.trim());
+            document.getElementById('hasil-pengerjaan').innerHTML = isBenar ? "🎉 Benar!" : "❌ Salah.";
+            
+            fetch(SCRIPT_URL, {
+                method: "POST", mode: "no-cors",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    action: "simpan_nilai_soal",
+                    barcode: loggedInNis,
+                    nama: document.getElementById('user-display').innerText,
+                    mapel: document.getElementById('soal_mapel').value,
+                    materi: document.getElementById('soal_materi').value,
+                    status: isBenar ? "Benar (100)" : "Salah (0)",
+                    evaluasi: currentSoalData.pembahasan
+                })
+            });
+        }
     </script>
 </body>
 </html>
