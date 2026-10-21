@@ -39,7 +39,7 @@
         <div id="login-selection">
             <h3>Pilih Peran Login</h3>
             <button class="submit-btn" onclick="showLogin('guru')" style="margin-bottom: 10px; background: #007bff;">👨‍🏫 Login Guru / Piket</button>
-            <button class="submit-btn" onclick="showLogin('siswa')" style="background: #17a2b8;">stu️ Login Siswa / Wali Murid</button>
+            <button class="submit-btn" onclick="showLogin('siswa')" style="background: #17a2b8;">👤 Login Siswa / Wali Murid</button>
         </div>
 
         <!-- FORM LOGIN GURU -->
@@ -94,7 +94,7 @@
             <div>
                 <button class="tab-btn active" onclick="switchTab('izin', this)">✉️ Lapor Izin / Sakit</button>
                 <button class="tab-btn" onclick="switchTab('kaih', this)">⭐ Catatan 7 KAIH</button>
-				<button class="tab-btn" onclick="switchTab('soal', this)">📝 Latihan Soal Stimulus</button>
+                <button class="tab-btn" onclick="switchTab('soal', this)">📝 Portal Soal AI</button>
             </div>
 
             <!-- TAB IZIN/SAKIT -->
@@ -130,66 +130,51 @@
 
                     <div class="kaih-box">
                         <label><input type="checkbox" id="k_bangun"> ☀️ 1. Bangun Pagi</label>
-                        <div class="desc">Bangun antara pukul 04.00–06.00 untuk melatih kedisiplinan dan kesiapan diri[cite: 23].</div>
+                        <div class="desc">Bangun antara pukul 04.00–06.00 untuk melatih kedisiplinan dan kesiapan diri.</div>
                     </div>
                     <div class="kaih-box">
                         <label><input type="checkbox" id="k_ibadah"> 🙏 2. Taat Beribadah</label>
-                        <div class="desc">Pengabdian dan ketaatan kepada Tuhan sesuai agama/kepercayaan untuk memperkuat spiritual[cite: 30].</div>
+                        <div class="desc">Pengabdian dan ketaatan kepada Tuhan sesuai agama/kepercayaan untuk memperkuat spiritual.</div>
                     </div>
                     <div class="kaih-box">
                         <label><input type="checkbox" id="k_olahraga"> ⚽ 3. Berolahraga</label>
-                        <div class="desc">Aktivitas fisik teratur untuk menjaga kebugaran tubuh dan kesehatan mental[cite: 37].</div>
+                        <div class="desc">Aktivitas fisik teratur untuk menjaga kebugaran tubuh dan kesehatan mental.</div>
                     </div>
                     <div class="kaih-box">
                         <label><input type="checkbox" id="k_makan"> 🥗 4. Makan Sehat & Bergizi</label>
-                        <div class="desc">Konsumsi makanan bergizi seimbang (sesuai pedoman Isi Piringku) untuk energi belajar[cite: 44, 77].</div>
+                        <div class="desc">Konsumsi makanan bergizi seimbang (sesuai pedoman Isi Piringku) untuk energi belajar.</div>
                     </div>
                     <div class="kaih-box">
                         <label><input type="checkbox" id="k_belajar"> 📚 5. Gemar Belajar</label>
-                        <div class="desc">Antusias menambah pengetahuan, membaca buku, dan mengembangkan keterampilan[cite: 52].</div>
+                        <div class="desc">Antusias menambah pengetahuan, membaca buku, dan mengembangkan keterampilan.</div>
                     </div>
                     <div class="kaih-box">
                         <label><input type="checkbox" id="k_sosial"> 🤝 6. Aktif Bermasyarakat</label>
-                        <div class="desc">Interaksi sosial, gotong royong, dan peduli terhadap sesama di lingkungan sekitar[cite: 61].</div>
+                        <div class="desc">Interaksi sosial, gotong royong, dan peduli terhadap sesama di lingkungan sekitar.</div>
                     </div>
                     <div class="kaih-box">
                         <label><input type="checkbox" id="k_tidur"> 🌙 7. Tidur Cepat</label>
-                        <div class="desc">Tidur tepat waktu di malam hari agar waktu istirahat cukup dan ideal[cite: 69].</div>
+                        <div class="desc">Tidur tepat waktu di malam hari agar waktu istirahat cukup dan ideal.</div>
                     </div>
 
                     <button type="submit" class="submit-btn">Simpan Catatan 7 KAIH</button>
                 </form>
             </div>
-        </div>
-	<!-- TAB SOAL STIMULUS AI -->
-<div id="soal-section" class="section">
-    <h3>📝 Latihan Soal Berbasis Stimulus (AI)</h3>
-    <div class="form-group">
-        <label>Pilih Mata Pelajaran:</label>
-        <select id="soal_mapel">
-            <option value="Bahasa Indonesia">Bahasa Indonesia</option>
-            <option value="IPA">Ilmu Pengetahuan Alam (IPA)</option>
-            <option value="Matematika">Matematika</option>
-            <option value="PPKn">PPKn</option>
-        </select>
-    </div>
-    <div class="form-group">
-        <label>Topik / Materi:</label>
-        <input type="text" id="soal_materi" placeholder="Contoh: Tata Surya, Pencemaran Lingkungan">
-    </div>
-    <button type="button" class="submit-btn" onclick="muatSoalBaru()" style="background:#17a2b8; margin-bottom:15px;">Mulai / Ambil Soal Baru</button>
 
-    <div id="kontainer-soal" class="hidden" style="background:#f9f9f9; padding:12px; border-radius:6px; border:1px solid #ddd; text-align:left;">
-        <p style="font-weight:bold; color:#333;">📖 Stimulus:</p>
-        <p id="teks-stimulus" style="font-size:13px; font-style:italic; background:#fff; padding:8px; border:1px dashed #ccc;"></p>
-        
-        <p style="font-weight:bold; color:#333; margin-top:10px;" id="teks-pertanyaan"></p>
-        <div id="pilihan-jawaban" style="font-size:13px; margin-bottom:10px;"></div>
-        
-        <button type="button" class="submit-btn" onclick="cekJawaban()">Kirim Jawaban</button>
-    </div>
-    <div id="hasil-pengerjaan" style="margin-top:10px; font-weight:bold; font-size:13px;"></div>
-</div>
+            <!-- TAB PORTAL SOAL AI (GEMINI CANVAS) -->
+            <div id="soal-section" class="section">
+                <div style="background: #f9f9f9; padding: 15px; border-radius: 8px; border: 1px solid #ddd; text-align: center;">
+                    <h3 style="color: #007bff; margin-top: 0;">🚀 Portal Latihan, PR, & Ulangan AI</h3>
+                    <p style="font-size: 13px; color: #555; margin-bottom: 15px;">
+                        Silakan klik tombol di bawah untuk membuka aplikasi soal interaktif. Pastikan Anda memasukkan nama/NIS yang sesuai agar nilai Anda tercatat oleh guru.
+                    </p>
+                    <a href="https://share.gemini.google/244dUFGvHCSv" target="_blank" class="submit-btn" style="text-decoration: none; display: block; padding: 12px; background: #007bff;">
+                        Buka Portal Soal AI 📚
+                    </a>
+                </div>
+            </div>
+        </div>
+
         <div id="result"></div>
     </div>
 
@@ -225,7 +210,6 @@
                 body: JSON.stringify({ action: "login_guru", nama: nama, nis: pass })
             })
             .then(() => {
-                // Validasi sisi klien ketat sesuai permintaan
                 if(nama.toLowerCase().includes("agnes") && pass === "199608112024211016") {
                     document.getElementById('login-guru-card').classList.add('hidden');
                     document.getElementById('guru-app').classList.remove('hidden');
@@ -274,35 +258,31 @@
             });
         }
 
-       function switchTab(tab, btn) {
-    // 1. Sembunyikan semua kotak section
-    var izinSec = document.getElementById('izin-section');
-    var kaihSec = document.getElementById('kaih-section');
-    var soalSec = document.getElementById('soal-section');
-    
-    if (izinSec) izinSec.classList.remove('active');
-    if (kaihSec) kaihSec.classList.remove('active');
-    if (soalSec) soalSec.classList.remove('active');
+        function switchTab(tab, btn) {
+            var izinSec = document.getElementById('izin-section');
+            var kaihSec = document.getElementById('kaih-section');
+            var soalSec = document.getElementById('soal-section');
+            
+            if (izinSec) izinSec.classList.remove('active');
+            if (kaihSec) kaihSec.classList.remove('active');
+            if (soalSec) soalSec.classList.remove('active');
 
-    // 2. Hilangkan warna aktif dari semua tombol
-    document.querySelectorAll('.tab-btn').forEach(function(b) {
-        b.classList.remove('active');
-    });
+            document.querySelectorAll('.tab-btn').forEach(function(b) {
+                b.classList.remove('active');
+            });
 
-    // 3. Tampilkan kotak section yang diklik
-    if (tab === 'izin' && izinSec) {
-        izinSec.classList.add('active');
-    } else if (tab === 'kaih' && kaihSec) {
-        kaihSec.classList.add('active');
-    } else if (tab === 'soal' && soalSec) {
-        soalSec.classList.add('active');
-    }
+            if (tab === 'izin' && izinSec) {
+                izinSec.classList.add('active');
+            } else if (tab === 'kaih' && kaihSec) {
+                kaihSec.classList.add('active');
+            } else if (tab === 'soal' && soalSec) {
+                soalSec.classList.add('active');
+            }
 
-    // 4. Berikan efek aktif pada tombol yang ditekan
-    if (btn) {
-        btn.classList.add('active');
-    }
-}
+            if (btn) {
+                btn.classList.add('active');
+            }
+        }
 
         let isProcessing = false;
         function onScanSuccess(decodedText) {
@@ -408,73 +388,6 @@
             .catch(err => {
                 resultDiv.className = "error";
                 resultDiv.innerHTML = `❌ Gagal: ${err}`;
-            });
-        }
-
-let currentSoalData = null;
-
-function muatSoalBaru() {
-    const mapel = document.getElementById('soal_mapel').value;
-    const materi = document.getElementById('soal_materi').value;
-    const hasilDiv = document.getElementById('hasil-pengerjaan');
-    const kontainerSoal = document.getElementById('kontainer-soal');
-    
-    if(!materi) {
-        alert("Harap isi topik atau materi terlebih dahulu!");
-        return;
-    }
-    
-    hasilDiv.innerHTML = "🤖 AI sedang merancang soal stimulus, mohon tunggu sebentar...";
-    kontainerSoal.classList.add('hidden');
-
-    fetch(SCRIPT_URL, {
-        method: "POST",
-        headers: { "Content-Type": "text/plain;charset=utf-8" }, // Menggunakan text/plain agar terhindar dari blokir CORS browser
-        body: JSON.stringify({ action: "get_soal", mapel: mapel, materi: materi })
-    })
-    .then(response => response.json())
-    .then(data => {
-        currentSoalData = data;
-        
-        // Tampilkan data ke elemen HTML
-        document.getElementById('teks-stimulus').innerText = data.stimulus;
-        document.getElementById('teks-pertanyaan').innerText = data.pertanyaan;
-        
-        let pilihanHtml = "";
-        data.pilihan.forEach((p, index) => {
-            let huruf = String.fromCharCode(65 + index); // A, B, C, D
-            pilihanHtml += `<label style="display:block; margin:5px 0; cursor:pointer;">
-                <input type="radio" name="jawaban" value="${huruf}"> ${p}
-            </label>`;
-        });
-        
-        document.getElementById('pilihan-jawaban').innerHTML = pilihanHtml;
-        kontainerSoal.classList.remove('hidden');
-        hasilDiv.innerHTML = "";
-    })
-    .catch(err => {
-        hasilDiv.innerHTML = `❌ Gagal memuat soal dari AI: ${err}`;
-    });
-}
-
-        function cekJawaban() {
-            const selected = document.querySelector('input[name="jawaban"]:checked');
-            if(!selected) { alert("Pilih jawaban!"); return; }
-            const isBenar = selected.value.includes(currentSoalData.kunci.trim());
-            document.getElementById('hasil-pengerjaan').innerHTML = isBenar ? "🎉 Benar!" : "❌ Salah.";
-            
-            fetch(SCRIPT_URL, {
-                method: "POST", mode: "no-cors",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    action: "simpan_nilai_soal",
-                    barcode: loggedInNis,
-                    nama: document.getElementById('user-display').innerText,
-                    mapel: document.getElementById('soal_mapel').value,
-                    materi: document.getElementById('soal_materi').value,
-                    status: isBenar ? "Benar (100)" : "Salah (0)",
-                    evaluasi: currentSoalData.pembahasan
-                })
             });
         }
     </script>
